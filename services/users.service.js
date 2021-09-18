@@ -1,5 +1,6 @@
 const { User } = require('../models/user.model.js');
 const { database } = require('../database/database.js');
+// const { supabase } = require('../database/supabaseClient');
 
 class UsersService {
 
@@ -12,11 +13,19 @@ class UsersService {
   //получение данных
   async getAllUsers() {
     console.log('service -- getAllUsers -- 1');
+
     const users =  await database.query(
       `SELECT * FROM users`,
       // "SELECT * FROM `users`",
       { type: database.QueryTypes.SELECT}
     );
+
+    //*********************************************************************
+    // let { data:users, error } = await supabase
+    //   .from('users')
+    //   .select('*')
+    //*********************************************************************
+
     console.log('service -- getAllUsers -- 2 : users ------------------------');
     console.log(users)
     return users;
