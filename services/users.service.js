@@ -1,3 +1,5 @@
+//TODO ::: очистить комментарии + отредактировать сообщения об ошибках валидации, передать их на клиент
+
 const { database } = require('../database/database.js');
 // const { User } = require('../models/user.model.js');
 // const { supabase } = require('../database/supabaseClient');

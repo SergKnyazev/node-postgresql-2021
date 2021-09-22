@@ -18,15 +18,6 @@ app.set('view engine', 'hbs');
     app.listen(PORT, () => {
       console.log(chalk.greenBright(`+++ Server has been started on port ${PORT}...`))
     });
-
-    // синхронизация с моделями БД
-    // database
-    //   .sync()
-    //   .then(() => {
-    //     console.log('+++ Models of database has been synchronized ...');
-    //   })
-    //   .catch((err) => console.log(`---ERROR : ${err}`));
-
   } catch (err) {
     console.log(chalk.redBright(`---ERROR : function startAPP with err=${err}`))
   }
