@@ -1,5 +1,5 @@
-const { User } = require('../models/user.model.js');
 const { database } = require('../database/database.js');
+// const { User } = require('../models/user.model.js');
 // const { supabase } = require('../database/supabaseClient');
 
 class UsersService {
@@ -14,9 +14,10 @@ class UsersService {
   async getAllUsers() {
     console.log('service -- getAllUsers -- 1');
 
+    const sqlQuery = `SELECT * FROM users`;    // "SELECT * FROM `users`" -- for mySQL
+
     const users =  await database.query(
-      `SELECT * FROM users`,
-      // "SELECT * FROM `users`",
+      sqlQuery,
       { type: database.QueryTypes.SELECT}
     );
 
@@ -45,17 +46,26 @@ class UsersService {
 
   // добавление данных
   async createUser(user) {
-    if (!user.name) {
-      throw new Error('не указано поле NAME')
+    const {name, age} = user;
+    let errorValidation = 'Не указано поле ';
+    if (!name) {
+      errorValidation += ' NAME';
     }
-    if (!user.age) {
-      throw new Error('не указано поле AGE')
+    if (!age) {
+      errorValidation += ' AGE';
     }
+    if (!name || !age) {
+      throw new Error(errorValidation)
+    }
+
     console.log('service -- createUser -- 1');
+
     const sqlQuery = `INSERT INTO users (name, age) VALUES ('${user.name}', '${user.age}')`;
     const result = await database.query(
-      sqlQuery
+      sqlQuery,
+      { type: database.QueryTypes.INSERT}
     );
+
     console.log('service -- createUser -- 2 : result ------------------------');
     console.log(result)
     return result;
@@ -80,7 +90,8 @@ class UsersService {
     console.log('service -- removeUser -- 1');
     const sqlQuery = `DELETE FROM users WHERE id=${id}`;
     const result = await database.query(
-      sqlQuery
+      sqlQuery,
+      { type: database.QueryTypes.DELETE}
     );
     console.log('service -- removeUser -- 2 : result ------------------------');
     console.log(result)
@@ -104,20 +115,15 @@ class UsersService {
     console.log('service -- editUser -- 1');
     const sqlQuery = `SELECT * FROM users WHERE id=${id}`;
     const resultArr = await database.query(
-      sqlQuery
+      sqlQuery,
+      { type: database.QueryTypes.SELECT}
     );
-    const result = resultArr[0][0];
+    const result = resultArr[0];
 
     console.log('service -- editUser -- 2 : result ------------------------');
-    console.log(result)
+    console.log(resultArr)
     return result;
   }
-
-
-
-
-
-  //TODO::: применить database.query ко всем методам класса
 
   // // обновление данных в БД
   // async setEditedUser(user) {
@@ -142,18 +148,18 @@ class UsersService {
   // обновление данных в БД
   async setEditedUser(user) {
     const {name, age, id} = user;
-    let error = 'ERROR : не указано поле ';
+    let errorValidation = 'Не указано поле ';
     if (!name) {
-      error += ' NAME';
+      errorValidation += ' NAME';
     }
     if (!age) {
-      error += ' AGE';
+      errorValidation += ' AGE';
     }
     if (!id) {
-      error += ' ID';
+      errorValidation += ' ID';
     }
     if (!name || !age || !id) {
-      throw new Error(error)
+      throw new Error(errorValidation)
     }
     console.log('service -- setEditedUser -- 1');
     const sqlQuery = `
@@ -162,20 +168,17 @@ class UsersService {
       WHERE id=${id}
     `;
     const result = await database.query(
-      sqlQuery
+      sqlQuery,
+      { type: database.QueryTypes.UPDATE}
     );
     console.log('service -- setEditedUser -- 2 : result ------------------------');
     console.log(result)
     return result;
   }
 
-
 }
-
 
 const usersService = new UsersService();
 
 module.exports = { usersService };
-
-// module.exports = new UsersService();
 

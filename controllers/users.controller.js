@@ -3,6 +3,7 @@ const { usersService } = require('../services/users.service.js');
 const ERROR_RENDER_CREATE_PAGE = `users.controller.js -- renderCreatePage -> catch : error`;
 
 class UsersController {
+
   // рендер формы добавления данных
   async renderCreatePage(req, res) {
     try {
@@ -15,7 +16,7 @@ class UsersController {
     }
   }
 
-  //получение данных ****************************************************
+  //получение данных
   async getAllUsers(req, res) {
     try {
       const users = await usersService.getAllUsers();
@@ -33,12 +34,12 @@ class UsersController {
     }
   }
 
-  //добавление данных ***************************************************
+  //добавление данных
   async createUser(req, res) {
     try {
-        await usersService.createUser(req.body);
-        console.log('controller -- getAllUsers -- 3 : result ------------------------');
-        console.log(req.body)
+      await usersService.createUser(req.body);
+      console.log('controller -- getAllUsers -- 3 : result ------------------------');
+      console.log(req.body)
 
       res.redirect('/')
     } catch (err) {
@@ -48,7 +49,7 @@ class UsersController {
     }
   }
 
-  //удаление данных ***************************************************
+  //удаление данных
   async removeUser (req, res) {
     try {
       await usersService.removeUser(req.params.id);
@@ -61,7 +62,7 @@ class UsersController {
     }
   }
 
-// получаем пользователя по id для редактирования ***************************************************
+// получаем пользователя по id для редактирования
   async editUser (req, res) {
     try {
       const user = await usersService.editUser(req.params.id);
@@ -89,25 +90,8 @@ class UsersController {
     }
   }
 
-  
-
 }
-
 
 const usersController = new UsersController();
 
 module.exports = { usersController };
-
-
-
-// const renderCreatePage = (req, res) => {
-
-//   try {
-//     res.render('create.hbs');
-//   } catch (err) {
-//     console.log('------------------- error catch renderCreatePage :');
-//     console.log(err);
-//   }
-// };
-
-// module.exports = { renderCreatePage };
