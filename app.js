@@ -31,8 +31,3 @@ app.set('view engine', 'hbs');
     console.log(`---ERROR : function startAPP with err=${err}`)
   }
 })()
-
-//TODO ::: Sequelize --> SQL
-//TODO ::: Sequelize --> Model
-//TODO ::: supabase --> SQL
-//TODO ::: supabase --> supabase API + subscribe on events
