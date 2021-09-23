@@ -1,17 +1,12 @@
-//TODO ::: очистить комментарии + отредактировать сообщения об ошибках валидации, передать их на клиент
-
 const { database } = require('../database/database.js');
-// const { User } = require('../models/user.model.js');
-// const { supabase } = require('../database/supabaseClient');
+
+const ERROR_GET_ALL_USERS = `users.service.js --> getAllUsers`;
+const ERROR_CREATE_USER = `users.service.js --> createUser`;
+const ERROR_REMOVE_USER = `users.service.js --> removeUser`;
+const ERROR_EDIT_USER = `users.service.js --> editUser`;
+const ERROR_SET_EDITED_USER = `users.service.js --> setEditedUser`;
 
 class UsersService {
-
-  // //получение данных
-  // async getAllUsers() {
-  //   console.log('getAllUsers has been started...');
-  //   return await User.findAll({raw: true});
-  // }
-
   //получение данных
   async getAllUsers() {
     console.log('service -- getAllUsers -- 1');
@@ -23,28 +18,15 @@ class UsersService {
       { type: database.QueryTypes.SELECT}
     );
 
-    //*********************************************************************
-    // let { data:users, error } = await supabase
-    //   .from('users')
-    //   .select('*')
-    //*********************************************************************
-
     console.log('service -- getAllUsers -- 2 : users ------------------------');
     console.log(users)
+
+    if (!users) {
+      throw new Error(`${ERROR_GET_ALL_USERS} : users === ${users}`)
+    }
+
     return users;
   }
-
-  // // добавление данных
-  // async createUser(user) {
-  //   if (!user.name) {
-  //     throw new Error('не указано поле NAME')
-  //   }
-  //   if (!user.age) {
-  //     throw new Error('не указано поле AGE')
-  //   }
-  //   const [result] = await Promise.all([User.create(user)]);
-  //   return result;
-  // }
 
   // добавление данных
   async createUser(user) {
@@ -57,7 +39,7 @@ class UsersService {
       errorValidation += ' AGE';
     }
     if (!name || !age) {
-      throw new Error(errorValidation)
+      throw new Error(`${ERROR_CREATE_USER} : ${errorValidation}`)
     }
 
     console.log('service -- createUser -- 1');
@@ -73,20 +55,12 @@ class UsersService {
     return result;
   }
 
-  // // удаление данных
-  // async removeUser(id) {
-  //   if (!id) {
-  //     throw new Error('не указан ID')
-  //   }
-  //   const [result] = await Promise.all([User.destroy({where: {id: id}})]);
-  //   return result;
-  // }
-  //
-
   // удаление данных
   async removeUser(id) {
+    let errorValidation = `Не указан `
     if (!id) {
-      throw new Error('не указан ID')
+      errorValidation += 'ID';
+      throw new Error(`${ERROR_REMOVE_USER} : ${errorValidation}`)
     }
 
     console.log('service -- removeUser -- 1');
@@ -100,52 +74,28 @@ class UsersService {
     return result;
   }
 
-  // // получаем пользователя по id для редактирования
-  // async editUser(id) {
-  //   if (!id) {
-  //     throw new Error('не указан ID')
-  //   }
-  //   const [user] = await Promise.all([User.findOne({where: {id: id}})]);
-  //   return user;
-  // }
-
   // получаем пользователя по id для редактирования
   async editUser(id) {
+    let errorValidation = `Не указан `
     if (!id) {
-      throw new Error('не указан ID')
+      errorValidation += 'ID';
+      throw new Error(`${ERROR_EDIT_USER} : ${errorValidation}`)
     }
+
     console.log('service -- editUser -- 1');
     const sqlQuery = `SELECT * FROM users WHERE id=${id}`;
-    const resultArr = await database.query(
+    const result = await database.query(
       sqlQuery,
       { type: database.QueryTypes.SELECT}
     );
-    const result = resultArr[0];
+    const user = result[0];
 
     console.log('service -- editUser -- 2 : result ------------------------');
-    console.log(resultArr)
-    return result;
+    console.log(result)
+    console.log('service -- editUser -- 2-2 : user ------------------------');
+    console.log(user)
+    return user;
   }
-
-  // // обновление данных в БД
-  // async setEditedUser(user) {
-  //   const {name, age, id} = user;
-  //   let error = 'ERROR : не указано поле ';
-  //   if (!name) {
-  //     error += ' NAME';
-  //   }
-  //   if (!age) {
-  //     error += ' AGE';
-  //   }
-  //   if (!id) {
-  //     error += ' ID';
-  //   }
-  //   if (!name || !age || !id) {
-  //     throw new Error(error)
-  //   }
-  //   const [result] = await Promise.all([User.update({ name: name, age: age }, { where: { id: id }})]);
-  //   return result;
-  // }
 
   // обновление данных в БД
   async setEditedUser(user) {
@@ -161,7 +111,7 @@ class UsersService {
       errorValidation += ' ID';
     }
     if (!name || !age || !id) {
-      throw new Error(errorValidation)
+      throw new Error(`${ERROR_SET_EDITED_USER} : ${errorValidation}`)
     }
     console.log('service -- setEditedUser -- 1');
     const sqlQuery = `
