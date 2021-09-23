@@ -1,21 +1,26 @@
 const { usersService } = require('../services/users.service.js');
 
-const ERROR_RENDER_CREATE_PAGE = `users.controller.js -- renderCreatePage -> catch : error`;
+const ERROR_RENDER_CREATE_PAGE = `users.controller.js --> renderCreatePage --> catch`;
+const ERROR_GET_ALL_USERS = `users.controller.js --> getAllUsers --> catch`;
+const ERROR_CREATE_USER = `users.controller.js --> createUser --> catch`;
+const ERROR_REMOVE_USER = `users.controller.js --> removeUser --> catch`;
+const ERROR_EDIT_USER = `users.controller.js --> editUser --> catch`;
+const ERROR_SET_EDITED_USER = `users.controller.js --> setEditedUser --> catch`;
 
 class UsersController {
+
   // рендер формы добавления данных
   async renderCreatePage(req, res) {
     try {
       res.render('create.hbs');
     } catch (err) {
-      console.log(`${ERROR_RENDER_CREATE_PAGE} : ${err}`);
       res.render('error.hbs', {
         message: `${ERROR_RENDER_CREATE_PAGE} : ${err}`,
       })
     }
   }
 
-  //получение данных ****************************************************
+  //получение данных
   async getAllUsers(req, res) {
     try {
       const users = await usersService.getAllUsers();
@@ -27,41 +32,39 @@ class UsersController {
       })
     } catch (err) {
       res.render('error.hbs', {
-        message: err,
+        message: `${ERROR_GET_ALL_USERS} : ${err}`,
       })
-      // res.status(500).json(err)
     }
   }
 
-  //добавление данных ***************************************************
+  //добавление данных
   async createUser(req, res) {
     try {
-        await usersService.createUser(req.body);
-        console.log('controller -- getAllUsers -- 3 : result ------------------------');
-        console.log(req.body)
+      await usersService.createUser(req.body);
+      console.log('controller -- createUser -- 3 : result ------------------------');
+      console.log(req.body)
 
       res.redirect('/')
     } catch (err) {
       res.render('error.hbs', {
-        message: err,
+        message: `${ERROR_CREATE_USER} : ${err}`,
       })
     }
   }
 
-  //удаление данных ***************************************************
+  //удаление данных
   async removeUser (req, res) {
     try {
       await usersService.removeUser(req.params.id);
       res.redirect('/')
     } catch (err) {
       res.render('error.hbs', {
-        message: err,
+        message: `${ERROR_REMOVE_USER} : ${err}`,
       })
-      // res.status(500).json(err)
     }
   }
 
-// получаем пользователя по id для редактирования ***************************************************
+// получаем пользователя по id для редактирования
   async editUser (req, res) {
     try {
       const user = await usersService.editUser(req.params.id);
@@ -70,9 +73,8 @@ class UsersController {
       })
     } catch (err) {
       res.render('error.hbs', {
-        message: err,
+        message: `${ERROR_EDIT_USER} : ${err}`,
       })
-      // res.status(500).json(err)
     }
   }
 
@@ -83,31 +85,13 @@ class UsersController {
       res.redirect('/')
     } catch (err) {
       res.render('error.hbs', {
-        message: err,
+        message: `${ERROR_SET_EDITED_USER} : ${err}`,
       })
-      // res.status(500).json(err)
     }
   }
 
-  
-
 }
-
 
 const usersController = new UsersController();
 
 module.exports = { usersController };
-
-
-
-// const renderCreatePage = (req, res) => {
-
-//   try {
-//     res.render('create.hbs');
-//   } catch (err) {
-//     console.log('------------------- error catch renderCreatePage :');
-//     console.log(err);
-//   }
-// };
-
-// module.exports = { renderCreatePage };
