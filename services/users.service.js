@@ -47,39 +47,22 @@ class UsersService {
     return result;
   }
 
+  // удаление данных
+  async removeUser(id) {
+    let errorValidation = `Не указан `
+    if (!id) {
+      errorValidation += 'ID';
+      throw new Error(`${ERROR_REMOVE_USER} : ${errorValidation}`)
+    }
 
+    console.log('service -- removeUser -- 1');
 
+    const [result] = await Promise.all([User.destroy({where: {id: id}})]);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  //***********************************************************************************************************
-
-  // // удаление данных
-  // async removeUser(id) {
-  //   if (!id) {
-  //     throw new Error('не указан ID')
-  //   }
-  //   const [result] = await Promise.all([User.destroy({where: {id: id}})]);
-  //   return result;
-  // }
-  //
+    console.log('service -- removeUser -- 2 : result ------------------------');
+    console.log(result)
+    return result;
+  }
 
   // // получаем пользователя по id для редактирования
   // async editUser(id) {
@@ -90,58 +73,6 @@ class UsersService {
   //   return user;
   // }
 
-  // // обновление данных в БД
-  // async setEditedUser(user) {
-  //   const {name, age, id} = user;
-  //   let error = 'ERROR : не указано поле ';
-  //   if (!name) {
-  //     error += ' NAME';
-  //   }
-  //   if (!age) {
-  //     error += ' AGE';
-  //   }
-  //   if (!id) {
-  //     error += ' ID';
-  //   }
-  //   if (!name || !age || !id) {
-  //     throw new Error(error)
-  //   }
-  //   const [result] = await Promise.all([User.update({ name: name, age: age }, { where: { id: id }})]);
-  //   return result;
-  // }
-
-}
-
-
-const usersService = new UsersService();
-
-module.exports = { usersService };
-
-// module.exports = new UsersService();
-
-/***
- class UsersService {
-
-
-  // удаление данных
-  async removeUser(id) {
-    let errorValidation = `Не указан `
-    if (!id) {
-      errorValidation += 'ID';
-      throw new Error(`${ERROR_REMOVE_USER} : ${errorValidation}`)
-    }
-
-    console.log('service -- removeUser -- 1');
-    const sqlQuery = `DELETE FROM users WHERE id=${id}`;
-    const result = await database.query(
-      sqlQuery,
-      { type: database.QueryTypes.DELETE}
-    );
-    console.log('service -- removeUser -- 2 : result ------------------------');
-    console.log(result)
-    return result;
-  }
-
   // получаем пользователя по id для редактирования
   async editUser(id) {
     let errorValidation = `Не указан `
@@ -151,15 +82,9 @@ module.exports = { usersService };
     }
 
     console.log('service -- editUser -- 1');
-    const sqlQuery = `SELECT * FROM users WHERE id=${id}`;
-    const result = await database.query(
-      sqlQuery,
-      { type: database.QueryTypes.SELECT}
-    );
-    const user = result[0];
 
-    console.log('service -- editUser -- 2 : result ------------------------');
-    console.log(result)
+    const [user] = await Promise.all([User.findOne({where: {id: id}})]);
+
     console.log('service -- editUser -- 2-2 : user ------------------------');
     console.log(user)
     return user;
@@ -182,15 +107,9 @@ module.exports = { usersService };
       throw new Error(`${ERROR_SET_EDITED_USER} : ${errorValidation}`)
     }
     console.log('service -- setEditedUser -- 1');
-    const sqlQuery = `
-      UPDATE users
-      SET name='${name}', age=${age}
-      WHERE id=${id}
-    `;
-    const result = await database.query(
-      sqlQuery,
-      { type: database.QueryTypes.UPDATE}
-    );
+
+    const [result] = await Promise.all([User.update({ name: name, age: age }, { where: { id: id }})]);
+
     console.log('service -- setEditedUser -- 2 : result ------------------------');
     console.log(result)
     return result;
@@ -198,7 +117,6 @@ module.exports = { usersService };
 
 }
 
- const usersService = new UsersService();
+const usersService = new UsersService();
 
- module.exports = { usersService };
- */
+module.exports = { usersService };
