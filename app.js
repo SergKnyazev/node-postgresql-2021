@@ -1,5 +1,5 @@
 const express = require('express');
-// require('dotenv').config();
+const chalk = require('chalk');
 const { database } = require('./database/database.js');
 const { usersRouter } = require('./routers/users.router.js');
 
@@ -13,21 +13,15 @@ app.set('view engine', 'hbs');
 
 ;(async function startApp() {
   try {
-      app.listen(PORT, () => {
-      console.log(`+++ Server has been started on port ${PORT}...`)
-    });
-
     await database.authenticate();
-    console.log('+++ Database MySQL is connected...');
-
-    // синхронизация с моделями БД
-    database
-      .sync()
-      .then(() => {
-        console.log('+++ Models of database has been synchronized ...');
-      })
-      .catch((err) => console.log(`---ERROR : ${err}`));
+    console.log(chalk.greenBright(`-------> Database postgreSQL is connected...`));
+    app.listen(PORT, () => {
+      console.log(chalk.greenBright(`-------> Server has been started on port ${PORT}...`))
+    });
+    // синхронизация моделей с таблицами БД
+    await database.sync();
+    console.log(chalk.yellowBright(`-------> Models of database tables has been synchronized ...`))
   } catch (err) {
-    console.log(`---ERROR : function startAPP with err=${err}`)
+    console.log(chalk.redBright(`------->ERROR : function startAPP with err=${err}`))
   }
 })()

@@ -4,5 +4,6 @@
 //TODO :::    branch = sequelize-model
 //TODO ::: 3) supabase --> SQL
 //TODO :::    branch = supabase-sql
-//TODO ::: 4) supabase --> supabase API + subscribe on events
-//TODO :::    branch = supabase-api
+
+//TODO +++ 4) supabase --> supabase API + subscribe on events
+//TODO +++    branch = supabase-api

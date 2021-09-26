@@ -18,21 +18,7 @@ usersRouter.route('/delete/:id')
 usersRouter.route('/edit/:id')
   .get(usersController.editUser);//получаем пользователя по id для редактирования
 
-// обновление данных в БД
-usersRouter.post('/edit', urlencodedParser, usersController.setEditedUser);
-
-
-
-//**************************************
-// app.route('/book')
-//   .get(function(req, res) {
-//     res.send('Get a random book');
-//   })
-//   .post(function(req, res) {
-//     res.send('Add a book');
-//   })
-//   .put(function(req, res) {
-//     res.send('Update the book');
-//   });
+usersRouter.route('/edit')
+  .post(urlencodedParser, usersController.setEditedUser);// обновление данных в БД
 
 module.exports = { usersRouter }
